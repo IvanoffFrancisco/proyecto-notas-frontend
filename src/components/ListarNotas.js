@@ -3,6 +3,7 @@ import Nota from './Nota'
 export default function ListarNotas(props) {
 
     const [data,setData]=useState([]);
+
     //llamada a las notas
     useEffect(()=>{
         const llamadaApi=async ()=>{
@@ -13,7 +14,7 @@ export default function ListarNotas(props) {
                      "access-token":localStorage.getItem("access-token")
                  }
              }
-             const respuesta=await fetch("http://localhost:4000/notas",config);
+             const respuesta=await fetch("https://tusnotas.herokuapp.com/notas",config);
              const res=await respuesta.json();
              setData(res);
              
@@ -22,7 +23,6 @@ export default function ListarNotas(props) {
          }
          llamadaApi();
      },[]);
-     
     
     return (
         <div className="row">

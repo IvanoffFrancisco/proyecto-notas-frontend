@@ -5,9 +5,12 @@ import NavUsuario from '../components/NavUsuario';
 import Agregar from '../images/agregar-archivo.png';
 export default function Inicio(props) {
     let token=localStorage.getItem("access-token");
+    
     const [registro,setRegistro]=useState({user:"",email:"",password:""});
     const [login,setLogin]=useState({email:"",password:""});
-    
+    const [nota,setNota]=useState({titulo:"",descripcion:"",fecha:""});
+
+
     // funcion del login
     const hendlerChangeLogin=(e)=>{
         const{name,value}=e.target;
@@ -17,7 +20,11 @@ export default function Inicio(props) {
     const hendlerChangeRegistro=(e)=>{
         const{name,value}=e.target;
         setRegistro({...registro,[name]:value});
-        console.log(registro);
+    }
+    //funcion de nueva nota
+    const hendlerNuevaNota=(e)=>{
+        const {name,value}=e.target;
+        setNota({...nota,[name]:value});
     }
 
     //submit del registro
@@ -30,7 +37,7 @@ export default function Inicio(props) {
             },
             body:JSON.stringify(registro)
         }
-        const respuesta=await fetch("http://localhost:4000/registro",config);
+        const respuesta=await fetch("https://tusnotas.herokuapp.com/registro",config);
         const res=await respuesta.text();
         if(!res){
             alert("No se pudo registrar el usuario, por favor vuelva a intentarlos")
@@ -51,7 +58,7 @@ export default function Inicio(props) {
             },
             body:JSON.stringify(login)
         }
-        const respuesta=await fetch("http://localhost:4000/login",config);
+        const respuesta=await fetch("https://tusnotas.herokuapp.com/login",config);
         const res=await respuesta.json();
         if(res.advertencia){
             alert("Usuario y/o contraseña incorrecta");
@@ -65,9 +72,31 @@ export default function Inicio(props) {
         }
     }
 
+    //cerrar sesion
     const cerrarSesion=()=>{
       localStorage.clear();
       props.history.push("/")
+    }
+    //nueva nota
+    const hendlerSubmitNuevaNota=async (e)=>{
+        e.preventDefault();
+        let config={
+            method:"POST",
+            headers:{
+                "content-type":"application/json",
+                "access-token":localStorage.getItem("access-token")
+            },
+            body:JSON.stringify(nota)
+        }
+        const respuesta=await fetch("https://tusnotas.herokuapp.com/nueva-nota",config);
+        const res=await respuesta.text();
+        if(!res){
+            alert("no se pudo guardar la nota");
+        }else{
+            alert("Se guardo la nota");
+            window.location.replace("https://tus-notass.herokuapp.com/")
+            
+        }
     }
 
     if(!token){
@@ -92,9 +121,41 @@ export default function Inicio(props) {
                     <h1 className="text-center">Notas de {localStorage.getItem("user")}</h1>
                     
                     <div className="container">
-                    <button className="border-0" style={{background:"#fff"}}><img src={Agregar} alt="asdasd"/></button>
+                    <button type="button" className="border-0" style={{background:"#fff"}} data-toggle="modal" data-target="#nuevanota">
+                        <img src={Agregar} alt="asdasd"/>
+                    </button>
                         <ListarNotas/>
                     </div>
+                    <div className="modal fade" id="nuevanota" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        {/* modal nueva nota */}
+                        <div className="modal-dialog" role="document">
+                            <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title" id="exampleModalLabel">Agrgar una Nueva Nota</h5>
+                                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div className="modal-body">
+                                <form>
+                                    <div className="form-group">
+                                        <input type="text" onChange={hendlerNuevaNota} className="form-control" name="titulo" placeholder="titulo" required/>
+                                    </div>
+                                    <div className="form-group">
+                                        <input type="text" onChange={hendlerNuevaNota} className="form-control" name="descripcion" placeholder="Descripción" required/>
+                                    </div>
+                                    <div className="form-group">
+                                        <input type="date" onChange={hendlerNuevaNota} className="form-control" name="fecha" required/>
+                                    </div>
+                                </form>
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                <button type="button" onClick={hendlerSubmitNuevaNota} className="btn btn-primary" data-dismiss="modal">Agregar</button>
+                            </div>
+                            </div>
+                        </div>
+                        </div>
             </div>
         )
     }
