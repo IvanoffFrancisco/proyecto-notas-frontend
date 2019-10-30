@@ -71,7 +71,7 @@ export default class Nota extends Component {
             alert("No se pudo modificar la nota")
         }else{
             alert(res)
-            window.location.replace("https://tusnotas.herokuapp.com")
+            window.location.replace("https://tus-notass.herokuapp.com/")
         }
     
     }
