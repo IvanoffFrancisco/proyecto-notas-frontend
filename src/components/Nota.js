@@ -120,13 +120,13 @@ export default class Nota extends Component {
                                         <div className="modal-body">
                                             <form>
                                                 <div className="form-group">
-                                                    <input type="text" className="form-control" onChange={this.hendlerChangeModificarNota} name="titulo" placeholder={this.props.titulo}/>
+                                                    <input type="text" className="form-control" onChange={this.hendlerChangeModificarNota} value={this.state.modificar.titulo} name="titulo" placeholder={this.props.titulo}/>
                                                 </div>
                                                 <div className="form-group">
-                                                    <input type="text" className="form-control" onChange={this.hendlerChangeModificarNota} name="descripcion" placeholder={this.props.descripcion}/>
+                                                    <input type="text" className="form-control" onChange={this.hendlerChangeModificarNota} value={this.state.modificar.descripcion} name="descripcion" placeholder={this.props.descripcion}/>
                                                 </div>
                                                 <div className="form-group">
-                                                    <input type="date" className="form-control" onChange={this.hendlerChangeModificarNota} name="fecha" placeholder={this.props.fecha} required/>
+                                                    <input type="date" className="form-control" onChange={this.hendlerChangeModificarNota} value={this.state.modificar.fecha} name="fecha" placeholder={this.props.fecha} required/>
                                                 </div>
                                             </form>
                                         </div>
